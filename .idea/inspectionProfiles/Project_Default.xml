@@ -1,0 +1,13 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="Chat_Bot.Data_Set.process_pipelines.douban.util" />
+          <option value="Chat_Bot.Data_Set.process_pipelines.douban.config" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
