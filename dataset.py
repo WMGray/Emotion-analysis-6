@@ -1,6 +1,7 @@
 """
-1. 去重数据
 1. 将各感情各自组成一个文件
+2. 删除多余的符号 eg: !!!-->!
+3. 数据去重
 """
 import os
 import re
@@ -9,11 +10,36 @@ import codecs
 import pandas as pd
 from config import Config
 
-
 # 可按数据集一个一个进行分类处理，但需要打开太多次Null、Like文件，效率不高
 # 故先打开Null、Like文件，再打开数据集分类处理(或许有更好的方法)
 
 # 其他（Null), 喜好(Like)，悲伤(Sad)，厌恶(Disgust)，愤怒(Anger)，高兴（Happiness）
+
+def regular(file_name):
+    """
+    句子规范化，主要是对原始语料的句子进行一些标点符号的统一处理
+    """
+    file = codecs.open(file_name, encoding=Config.encoding)
+    sen = []
+    for index, line in enumerate(file):
+        line = re.sub(r'…{1,100}', '…', line)
+        line = re.sub(r'\.{3,100}', '…', line)
+        line = re.sub(r'···{2,100}', '…', line)
+        line = re.sub(r'\.{1,100}', '。', line)
+        line = re.sub(r'。{1,100}', '。', line)
+        line = re.sub(r'？{1,100}', '？', line)
+        line = re.sub(r'!{1,100}', '！', line)
+        line = re.sub(r'！{1,100}', '！', line)
+        line = re.sub(r'~{1,100}', '～', line)
+        line = re.sub(r'～{1,100}', '～', line)
+        sen.append(line)
+    file.close()
+
+    file = codecs.open(file_name, "w", encoding=Config.encoding)
+    for line in sen:
+        file.write(line)
+    file.close()
+
 
 def qa_process(pairs, result, emotion_type):
     """处理问答对[[sentence,emotion],[],...]"""
@@ -92,6 +118,7 @@ def file_remove_same(data_path, emotion_type):
     data = [item.strip() for item in file.readlines()]  # 针对最后一行没有换行符，与其他它行重复的情况
     new_data = list(set(data))
     result.writelines([item + '\n' for item in new_data if item])  # 针对去除文件中有多行空行的情况
+
     file.close()
     result.close()
 
@@ -110,6 +137,10 @@ def null(data_path, result_path):
     # 处理ecg_test_data.xlsx
     print("处理ecg_test_data.xlsx")
     ecg_test_process(data_path[2], result_path, 0)
+
+    # 去除多余符号
+    print("去除多余符号")
+    regular(result_path)
 
     # 数据去重
     print("数据去重")
@@ -132,6 +163,10 @@ def like(data_path, result_path):
     print("处理ecg_test_data.xlsx")
     ecg_test_process(data_path[2], result_path, 1)
 
+    # 去除多余符号
+    print("去除多余符号")
+    regular(result_path)
+
     # 数据去重
     print("数据去重")
     file_remove_same(result_path, 'Like')
@@ -152,6 +187,10 @@ def sad(data_path, result_path):
     # 处理ecg_test_data.xlsx
     print("处理ecg_test_data.xlsx")
     ecg_test_process(data_path[2], result_path, 2)
+
+    # 去除多余符号
+    print("去除多余符号")
+    regular(result_path)
 
     # 数据去重
     print("数据去重")
@@ -174,6 +213,10 @@ def disgust(data_path, result_path):
     print("处理ecg_test_data.xlsx")
     ecg_test_process(data_path[2], result_path, 3)
 
+    # 去除多余符号
+    print("去除多余符号")
+    regular(result_path)
+
     # 数据去重
     print("数据去重")
     file_remove_same(result_path, 'Disgust')
@@ -195,6 +238,10 @@ def anger(data_path, result_path):
     print("处理ecg_test_data.xlsx")
     ecg_test_process(data_path[2], result_path, 4)
 
+    # 去除多余符号
+    print("去除多余符号")
+    regular(result_path)
+
     # 数据去重
     print("数据去重")
     file_remove_same(result_path, 'Anger')
@@ -215,6 +262,10 @@ def happiness(data_path, result_path):
     # 处理ecg_test_data.xlsx
     print("处理ecg_test_data.xlsx")
     ecg_test_process(data_path[2], result_path, 5)
+
+    # 去除多余符号
+    print("去除多余符号")
+    regular(result_path)
 
     # 数据去重
     print("数据去重")

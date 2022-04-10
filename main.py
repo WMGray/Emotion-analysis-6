@@ -15,6 +15,7 @@ from tensorflow.keras.layers import LSTM
 from tensorflow.keras.layers import Dense, Dropout,Activation
 from tensorflow.keras.models import model_from_yaml
 import multiprocessing
+import matplotlib.pyplot as plt
 from config import Config
 
 vocab_dim = 200  # 词向量维度
@@ -51,7 +52,7 @@ def load_file():
 
 def tokenizer(text):
     """对句子经行分词，并去掉换行符，结果保存再word.json文件中"""
-    print("开始")
+    print("开始分词")
     word_json = codecs.open(Config.word_path, 'w', encoding=Config.encoding)
 
     text = [jieba.lcut(document.replace('\n', '')) for document in text]   # jieba.lcut() 生成一个列表
@@ -143,7 +144,18 @@ def train_lstm(n_symbols,embedding_weights,x_train,y_train,x_test,y_test):
     model.summary()
 
     print("Train...") # batch_size=128
-    model.fit(x_train, y_train, batch_size=batch_size, epochs=n_epoch, verbose=1)
+    history = model.fit(x_train, y_train,
+                        batch_size=batch_size, epochs=n_epoch,
+                        verbose=1, validation_data=(x_test, y_test))
+    acc = history.history['acc']
+    loss = history.history['loss']
+    epochs = range(1, len(acc) + 1)
+
+    plt.title('Accuracy and Loss')
+    plt.plot(epochs, acc, 'red', label='Training acc')
+    plt.plot(epochs, loss, 'blue', label='Validation loss')
+    plt.legend()
+    plt.show()
 
     print("Evaluate...")
     score = model.evaluate(x_test, y_test, batch_size=batch_size)
@@ -156,8 +168,8 @@ def train_lstm(n_symbols,embedding_weights,x_train,y_train,x_test,y_test):
 
 #训练模型，并保存
 print('Loading Data...')
-combined,y=load_file()
-print(len(combined),len(y))
+combined,y =load_file()
+print(len(combined), len(y))
 
 print('Tokenising...')
 if os.path.exists(Config.word_path):
