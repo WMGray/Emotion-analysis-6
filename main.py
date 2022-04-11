@@ -24,7 +24,7 @@ n_iterations = 10  # 迭代次数
 n_exposures = 10    # 词频截断值
 window_size = 7  # 窗口大小
 batch_size = 128  # 批次大小
-n_epoch = 4      # 迭代次数
+n_epoch = 20      # 迭代次数
 input_length = 100  # 输入序列长度
 cpu_count = multiprocessing.cpu_count()  #
 
@@ -54,8 +54,19 @@ def tokenizer(text):
     """对句子经行分词，并去掉换行符，结果保存再word.json文件中"""
     print("开始分词")
     word_json = codecs.open(Config.word_path, 'w', encoding=Config.encoding)
+    stopwords = codecs.open(Config.stop_words_path, encoding='utf-8', errors='replace')  # 加载停用词
+    stop_words, text = [], []
+    for line in stopwords:
+        stop_words.append(line.strip())
 
-    text = [jieba.lcut(document.replace('\n', '')) for document in text]   # jieba.lcut() 生成一个列表
+    for document in combined:
+        word_list = jieba.lcut(document.replace('\n', ''))
+        for w in word_list:
+            if w in stop_words:
+                print(w, word_list)
+                word_list.remove(w)
+                print(word_list)
+        text.append(word_list)
 
     json.dump(text, word_json)
 
@@ -66,28 +77,62 @@ def tokenizer(text):
 def create_dictionaries(model=None, combined=None):
     """创建词语字典，并返回每个词语的索引，词向量，以及每个句子所对应的词语索引"""
     if (combined is not None) and (model is not None):
-        gensim_dict = Dictionary()  # 创建一个空的词典,构建 word<->id 映射
-        gensim_dict.doc2bow(list(model.wv.index_to_key),
-                            allow_update=True)  # 构建词袋，每个单词对应一个id，词袋中的单词不重复
-        w2indx = {v: k + 1 for k, v in gensim_dict.items()}  # 所有频数超过10的词语的索引字典
-        w2vec = {word: model.wv[word] for word in w2indx.keys()}  # 所有频数超过10的词语的词向量字典
+        if os.path.exists(Config.word_path) and os.path.exists(Config.w2vec_path) and os.path.exists(Config.w2indx_path):    # 已写入
+            print("加载词典")
+            w2indx_json = codecs.open(Config.w2indx_path, 'r', encoding=Config.encoding)
+            w2vec_json = codecs.open(Config.w2vec_path, 'r', encoding=Config.encoding)
+            combined_json = codecs.open(Config.combined_path, 'r', encoding=Config.encoding)
 
-        def parse_dataset(combined):
-            """将combined中的数据转换为索引表示"""
-            data = []
-            for sentence in combined:
-                new_txt = []
-                for word in sentence:
-                    try:
-                        new_txt.append(w2indx[word])
-                    except:
-                        new_txt.append(0)
-                data.append(new_txt)
-            return data
+            w2indx = json.load(w2indx_json)
+            W2VEC = json.load(w2vec_json)   # 加载的数组为list，需转换为numppy数组
+            combined = np.loadtxt(combined_json)
 
-        combined = parse_dataset(combined)   # 将combined中的数据转换为索引表示
-        combined = sequence.pad_sequences(combined, maxlen=maxlen)  # 每个句子所含词语对应的索引，所以句子中含有频数小于10的词语，索引为0
-        return w2indx, w2vec, combined
+            # 转换
+            w2vec =dict()
+            for key, value in W2VEC.items():
+                w2vec[key] = np.asarray(value)
+
+            w2indx_json.close()
+            w2vec_json.close()
+            combined_json.close()
+
+            return w2indx, w2vec, combined
+        else:
+            gensim_dict = Dictionary()  # 创建一个空的词典,构建 word<->id 映射
+            gensim_dict.doc2bow(list(model.wv.index_to_key),
+                                allow_update=True)  # 构建词袋，每个单词对应一个id，词袋中的单词不重复
+            w2indx = {v: k + 1 for k, v in gensim_dict.items()}  # 所有频数超过10的词语的索引字典
+            w2vec = {word: model.wv[word] for word in w2indx.keys()}  # 所有频数超过10的词语的词向量字典
+            W2VEC = {word: model.wv[word].tolist() for word in w2indx.keys()} # 将numpy数组转换为list存储
+            def parse_dataset(combined):
+                """将combined中的数据转换为索引表示"""
+                data = []
+                for sentence in combined:
+                    new_txt = []
+                    for word in sentence:
+                        try:
+                            new_txt.append(w2indx[word])
+                        except:
+                            new_txt.append(0)
+                    data.append(new_txt)
+                return data
+
+            combined = parse_dataset(combined)  # 将combined中的数据转换为索引表示
+            combined = sequence.pad_sequences(combined, maxlen=maxlen)  # 每个句子所含词语对应的索引，所以句子中含有频数小于10的词语，索引为0
+
+            w2indx_json = codecs.open(Config.w2indx_path, 'w', encoding=Config.encoding)
+            w2vec_json = codecs.open(Config.w2vec_path, 'w', encoding=Config.encoding)
+            combined_json = codecs.open(Config.combined_path, 'w', encoding=Config.encoding)
+
+            json.dump(w2indx, w2indx_json)
+            json.dump(W2VEC, w2vec_json)
+            np.savetxt(combined_json, combined) # numpy.ndarrayi
+
+            w2indx_json.close()
+            w2vec_json.close()
+            combined_json.close()
+
+            return w2indx, w2vec, combined
     else:
         print('No data provided...')
 
@@ -134,7 +179,6 @@ def train_lstm(n_symbols,embedding_weights,x_train,y_train,x_test,y_test):
     model.add(LSTM(units=50, activation='tanh'))
     model.add(Activation('hard_sigmoid'))
     model.add(Dropout(0.5))
-    model.add(Dense())
     model.add(Dense(6, activation='softmax')) # Dense=>全连接层,输出维度=6
     model.add(Activation('softmax'))
 

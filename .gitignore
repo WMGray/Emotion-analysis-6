@@ -1,3 +1,6 @@
 Data/ecg_test_data.xlsx
 Data/ecg_train_data.json
 Data/word.json
+Data/w2vec.json
+Data/w2indx.json
+Data/combined.json

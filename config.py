@@ -36,6 +36,9 @@ class Config:
     new_List = [null_new_path, like_new_path, sad_new_path, disgust_new_path, anger_new_path, happiness_new_path]  # 已分类数据
 
     # 分词数据
-    word_path = os.path.join(root_path, "word.json")  # 分词数据
-
-
+    word_path = os.path.join(root_path, "word.json")  # 分词数据--列表
+    w2indx_path = os.path.join(root_path, "w2indx.json")  # 分词索引--字典
+    w2vec_path = os.path.join(root_path, "w2vec.json")  # 分词向量--列表
+    combined_path = os.path.join(root_path, "combined.json")  # 分词数据--np
+    # stopwords
+    stop_words_path = os.path.join(root_path, "StopWord.txt")  # 停用词
