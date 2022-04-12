@@ -47,19 +47,21 @@
    
 3. 数据清洗:删除重复的符号、去重
 
-   |  Emotion  |      Size       |
-   | :-------: | :-------------: |
-   |   Null    | 551267-->522995 |
-   |   Like    | 468804-->440551 |
-   |    Sad    | 317758-->301459 |
-   |  Disgust  | 393769-->381264 |
-   |   Anger   | 224396-->216072 |
-   | Happiness | 328073-->302244 |
-   | **Total** |     2164585     |
+   |  Emotion  |       Siz       |      |
+   | :-------: | :-------------: | :--: |
+   |   Null    | 551267-->522995 | 0.24 |
+   |   Like    | 468804-->440551 | 0.2  |
+   |    Sad    | 317758-->301459 | 0.13 |
+   |  Disgust  | 393769-->381264 | 0.17 |
+   |   Anger   | 224396-->216072 | 0.09 |
+   | Happiness | 328073-->302244 | 0.14 |
+   | **Total** |     2164585     |      |
 
 - 由于某些不可知原因，每次去重后数据位置发生变化，但数据量并不会发生改变(相较于未去重减少，只是去重数据位置不固定)
+- 在所有数据基础上训练30轮，训练集准确率为70%左右
+- 因所有数据训练时间过长，故每个随机选取20w进行试验
 
-修改：d
+修改：
 
 - https://cache.one/read/16905246
 - https://www.kaggle.com/general/197993
@@ -74,3 +76,4 @@
 - [基于BiLSTM的对话文本情感分析](http://www.chenjianqu.com/show-38.html)
 - https://github.com/lidianxiang/predict_chinese_sentiment_in_tensorflow（可参考）
 - https://github.com/luanshiqiguo/emotion-analysis-5
+- https://github.com/DLLXW/MultiClassify_LSTM_ForChinese

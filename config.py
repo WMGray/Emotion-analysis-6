@@ -35,10 +35,19 @@ class Config:
     happiness_new_path = os.path.join(classfication_root_path, "Happiness_new.tsv")  # 高兴
     new_List = [null_new_path, like_new_path, sad_new_path, disgust_new_path, anger_new_path, happiness_new_path]  # 已分类数据
 
+    # 选取20w
+    null_20w_path = os.path.join(classfication_root_path, "Null_20w.tsv")  # Null
+    like_20w_path = os.path.join(classfication_root_path, "Like_20w.tsv")  # 喜好
+    sad_20w_path = os.path.join(classfication_root_path, "Sad_20w.tsv")  # 悲伤
+    disgust_20w_path = os.path.join(classfication_root_path, "Disgust_20w.tsv")  # 厌恶
+    anger_20w_path = os.path.join(classfication_root_path, "Anger_20w.tsv")  # 愤怒
+    happiness_20w_path = os.path.join(classfication_root_path, "Happiness_20w.tsv")  # 高兴
+    new_20w_List = [null_20w_path, like_20w_path, sad_20w_path, disgust_20w_path, anger_20w_path, happiness_20w_path]  # 已分类数据
     # 分词数据
     word_path = os.path.join(root_path, "word.json")  # 分词数据--列表
     w2indx_path = os.path.join(root_path, "w2indx.json")  # 分词索引--字典
     w2vec_path = os.path.join(root_path, "w2vec.json")  # 分词向量--列表
     combined_path = os.path.join(root_path, "combined.json")  # 分词数据--np
+
     # stopwords
     stop_words_path = os.path.join(root_path, "StopWord.txt")  # 停用词

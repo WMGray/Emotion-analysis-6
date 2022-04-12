@@ -8,12 +8,29 @@ import re
 import json
 import codecs
 import pandas as pd
+import random
 from config import Config
 
 # 可按数据集一个一个进行分类处理，但需要打开太多次Null、Like文件，效率不高
 # 故先打开Null、Like文件，再打开数据集分类处理(或许有更好的方法)
 
 # 其他（Null), 喜好(Like)，悲伤(Sad)，厌恶(Disgust)，愤怒(Anger)，高兴（Happiness）
+
+
+def select_20w(data_path, result_path):
+    """随机选取20w"""
+    data = codecs.open(data_path,  encoding=Config.encoding, errors='replace')
+    result = codecs.open(result_path, 'w', encoding=Config.encoding)
+
+    data_list = data.readlines()  # 读取数据
+    random.shuffle(data_list)   # 打乱数据
+
+    for i in range(200000): # 20w
+        result.write(data_list[i])
+
+    result.close()
+    data.close()
+
 
 def regular(file_name):
     """
@@ -109,10 +126,9 @@ def ecg_test_process(data_path, result_path, emotion_type):
     result.close()
 
 
-def file_remove_same(data_path, emotion_type):
+def file_remove_same(data_path, result_path):
     """数据去重"""
     file = codecs.open(data_path, encoding=Config.encoding, errors='replace')
-    result_path = os.path.join(Config.classfication_root_path + '/' + emotion_type + '_new.tsv')
     result = codecs.open(result_path, 'a', encoding=Config.encoding)
 
     data = [item.strip() for item in file.readlines()]  # 针对最后一行没有换行符，与其他它行重复的情况
@@ -144,8 +160,11 @@ def null(data_path, result_path):
 
     # 数据去重
     print("数据去重")
-    file_remove_same(result_path, 'Null')
+    file_remove_same(result_path, Config.new_List[0])
 
+    # 选取20w数据
+    print("选取20w数据")
+    select_20w(Config.new_List[0], Config.new_20w_List[0])
 
 def like(data_path, result_path):
     """写入Like情绪句子"""
@@ -169,7 +188,11 @@ def like(data_path, result_path):
 
     # 数据去重
     print("数据去重")
-    file_remove_same(result_path, 'Like')
+    file_remove_same(result_path, Config.new_List[1])
+
+    # 选取20w数据
+    print("选取20w数据")
+    select_20w(Config.new_List[1], Config.new_20w_List[1])
 
 
 def sad(data_path, result_path):
@@ -194,7 +217,11 @@ def sad(data_path, result_path):
 
     # 数据去重
     print("数据去重")
-    file_remove_same(result_path, 'Sad')
+    file_remove_same(result_path, Config.new_List[2])
+
+    # 选取20w数据
+    print("选取20w数据")
+    select_20w(Config.new_List[2], Config.new_20w_List[2])
 
 
 def disgust(data_path, result_path):
@@ -219,7 +246,11 @@ def disgust(data_path, result_path):
 
     # 数据去重
     print("数据去重")
-    file_remove_same(result_path, 'Disgust')
+    file_remove_same(result_path, Config.new_List[3])
+
+    # 选取20w数据
+    print("选取20w数据")
+    select_20w(Config.new_List[3], Config.new_20w_List[3])
 
 
 def anger(data_path, result_path):
@@ -244,7 +275,11 @@ def anger(data_path, result_path):
 
     # 数据去重
     print("数据去重")
-    file_remove_same(result_path, 'Anger')
+    file_remove_same(result_path, Config.new_List[4])
+
+    # 选取20w数据
+    print("选取20w数据")
+    select_20w(Config.new_List[4], Config.new_20w_List[4])
 
 
 def happiness(data_path, result_path):
@@ -269,7 +304,11 @@ def happiness(data_path, result_path):
 
     # 数据去重
     print("数据去重")
-    file_remove_same(result_path, 'Happiness')
+    file_remove_same(result_path, Config.new_List[5])
+
+    # 选取20w数据
+    print("选取20w数据")
+    select_20w(Config.new_List[5], Config.new_20w_List[5])
 
 
 def classification():
