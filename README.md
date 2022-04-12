@@ -61,6 +61,9 @@
 - 在所有数据基础上训练30轮，训练集准确率为70%左右
 - 因所有数据训练时间过长，故每个随机选取20w进行试验
 
+# 代码
+  代码主要参考  并做了一些修改
+
 修改：
 
 - https://cache.one/read/16905246
@@ -72,7 +75,8 @@
 - ![image-20220409163304407](C:\Users\14667\AppData\Roaming\Typora\typora-user-images\image-20220409163304407.png)
 
 参考：
-
+- [如何选择优化器 optimizer](https://blog.csdn.net/aliceyangxi1987/article/details/73210204)
+- [【深度学习之美】激活引入非线性，池化预防过拟合（入门系列之十二）](https://developer.aliyun.com/article/167391)
 - [基于BiLSTM的对话文本情感分析](http://www.chenjianqu.com/show-38.html)
 - https://github.com/lidianxiang/predict_chinese_sentiment_in_tensorflow（可参考）
 - https://github.com/luanshiqiguo/emotion-analysis-5
