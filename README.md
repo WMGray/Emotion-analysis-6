@@ -58,9 +58,15 @@
    | **Total** |     2164585     |      |
 
 - 由于某些不可知原因，每次去重后数据位置发生变化，但数据量并不会发生改变(相较于未去重减少，只是去重数据位置不固定)
+- ![image-20220413002814804](C:\Users\14667\AppData\Roaming\Typora\typora-user-images\image-20220413002814804.png)
 - 在所有数据基础上训练30轮，训练集准确率为70%左右
 - 因所有数据训练时间过长，故每个随机选取20w进行试验
-
+# 尝试：
+  1. ```
+    ```
+  在所有数据基础上训练30轮，训练集准确率为70%左右
+  1. 75~78%的准确率
+  2. 
 # 代码
   代码主要参考  并做了一些修改
 
@@ -77,7 +83,10 @@
 参考：
 - [如何选择优化器 optimizer](https://blog.csdn.net/aliceyangxi1987/article/details/73210204)
 - [【深度学习之美】激活引入非线性，池化预防过拟合（入门系列之十二）](https://developer.aliyun.com/article/167391)
+- [Keras文本分类实战（上）](https://developer.aliyun.com/article/657736)
+- [Keras文本分类实战（下）](https://developer.aliyun.com/article/663186?spm=a2c6h.24874632.expert-profile.204.5b4aadc9oATARD)
+- [text_classification](https://github.com/LuffysMan/text_classification)
 - [基于BiLSTM的对话文本情感分析](http://www.chenjianqu.com/show-38.html)
-- https://github.com/lidianxiang/predict_chinese_sentiment_in_tensorflow（可参考）
-- https://github.com/luanshiqiguo/emotion-analysis-5
-- https://github.com/DLLXW/MultiClassify_LSTM_ForChinese
+- [keras中神经网络优化](https://blog.csdn.net/Xwei1226/article/details/81297500)
+- [LSTM中文文本进行情感多分类](https://github.com/DLLXW/MultiClassify_LSTM_ForChinese)
+- [基于LSTM三分类的文本情感分析](https://github.com/Edward1Chou/SentimentAnalysis)
