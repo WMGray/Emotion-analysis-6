@@ -63,11 +63,102 @@
 - 因所有数据训练时间过长，故每个随机选取20w进行试验
 # 尝试：
   1. ```
-    ```
-  在所有数据基础上训练30轮，训练集准确率为70%左右
-  1. 75~78%的准确率
-  2. 
+     model.add(Embedding(output_dim=vocab_dim,
+                             input_dim=n_symbols,
+                             mask_zero=True,
+                             weights=[embedding_weights],
+                             input_length=input_length))  # Adding Input Length
+         model.add(LSTM(output_dim=50, activation='tanh'))
+         model.add(Dropout(0.5))
+         model.add(Dense(3, activation='softmax')) # Dense=>全连接层,输出维度=3
+         model.add(Activation('softmax'))
+
+​		在所有数据基础上训练30轮，训练集准确率为70%左右
+
+ 2. 根据**[ text_classification](https://github.com/LuffysMan/text_classification)**修改网络，准确率提升到0.77
+
+ 3. ![image-20220413201059833](C:\Users\14667\AppData\Roaming\Typora\typora-user-images\image-20220413201059833.png)
+
+    将BN层调整至Dropout层下
+
+    ![	](C:\Users\14667\AppData\Roaming\Typora\typora-user-images\image-20220413201257676.png)
+
+    4. ​    model.add(Embedding(output_dim=vocab_dim,
+	   ​                        input_dim=n_symbols,
+       ​                        mask_zero=True,  # 
+       ​                        trainable=True,  
+       ​                        weights=[embedding_weights],
+       ​                        input_length=input_length))  # Adding Input Length
+       ​    model.add(SpatialDropout1D(0.4))  # 功能与 Dropout 相同，但它会丢弃整个 1D 的特征图而不是丢弃单个元素。
+       ​    model.add(Conv1D(activation='tanh', padding='same', filters=32, kernel_size=5))  # 卷积层
+       ​    model.add(MaxPool1D(pool_size=2))   # 池化层
+       ​    model.add(Bidirectional(LSTM(100, return_sequences=True, activation='tanh'), merge_mode='concat'))   # 双向循环神经网络层
+       ​    model.add(Dropout(0.3))
+       ​    model.add(MaxPool1D(pool_size=2))
+       ​    model.add(LSTM(50, activation='tanh'))  # LSTM 层
+       ​    model.add(Flatten())  # 扁平层
+       ​    model.add(Dropout(0.3))
+       ​    model.add(BatchNormalization()) # 批标准化
+       ​    model.add(Dense(6, activation='softmax'))            #加入偏置项
+    
+       ![image-20220413220944348](C:\Users\14667\AppData\Roaming\Typora\typora-user-images\image-20220413220944348.png)
+    
+       5. ```
+          model.add(Embedding(output_dim=vocab_dim,
+	                       input_dim=n_symbols,
+                           mask_zero=True,  # 
+	                       trainable=True,  
+	                       weights=[embedding_weights],
+	                       input_length=input_length))  # Adding Input Length
+	      model.add(SpatialDropout1D(0.4))  # 功能与 Dropout 相同，但它会丢弃整个 1D 的特征图而不是丢弃单个元素。
+	      model.add(Conv1D(activation='tanh', padding='same', filters=32, kernel_size=5))  # 卷积层
+	      model.add(MaxPool1D(pool_size=2))   # 池化层
+	      model.add(Bidirectional(LSTM(100, return_sequences=True, activation='tanh'), merge_mode='concat'))   # 双向循环神经网络层
+	      model.add(Dropout(0.3))
+	      model.add(MaxPool1D(pool_size=2))
+	      model.add(BatchNormalization()) # 批标准化
+	      model.add(LSTM(50, activation='relu'))  # LSTM 层
+	      model.add(Flatten())  # 扁平层
+	      model.add(Dropout(0.3))
+	      model.add(Dense(6, activation='softmax'))            #加入偏置项
+	      ```
+
+![image-20220413230726477](C:\Users\14667\AppData\Roaming\Typora\typora-user-images\image-20220413230726477.png)
+
+6. ```
+   model = Sequential()
+       # 使用预训练的词向量 trainable=True 表示可训练
+       model.add(Embedding(output_dim=vocab_dim,
+                           input_dim=n_symbols,
+                           mask_zero=True, 
+                           trainable=True,  
+                           weights=[embedding_weights],
+                           input_length=input_length))  # Adding Input Length
+       model.add(SpatialDropout1D(0.3))  # 功能与 Dropout 相同，但它会丢弃整个 1D 的特征图而不是丢弃单个元素。
+       model.add(Conv1D(activation='tanh', padding='same', filters=32, kernel_size=7))  # 卷积层
+       model.add(MaxPool1D(pool_size=2))   # 池化层
+       model.add(Bidirectional(LSTM(100, return_sequences=True, activation='tanh'), merge_mode='concat'))   # 双向循环神经网络层
+       model.add(Dropout(0.2))
+       model.add(MaxPool1D(pool_size=2))
+       model.add(LSTM(50, activation='tanh'))  # LSTM 层
+       model.add(Flatten())  # 扁平层
+       model.add(Dropout(0.2))
+       model.add(BatchNormalization()) # 批标准化
+       model.add(Dense(6, activation='tanh'))            #加入偏置项
+       # model.add(Dense(3, activation='tanh',            #加入偏置项
+       #                 kernel_regularizer=regularizers.l2(0.01),
+       #                 activity_regularizer=regularizers.l2(0.01)))
+       model.add(Activation('softmax'))
+   ```
+
+   
+
+​	        	 
+
+
+
 # 代码
+
   代码主要参考  并做了一些修改
 
 修改：

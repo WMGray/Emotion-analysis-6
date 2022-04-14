@@ -199,20 +199,20 @@ def train_lstm(n_symbols,embedding_weights,x_train,y_train,x_test,y_test):
                         weights=[embedding_weights],
                         input_length=input_length))  # Adding Input Length
     model.add(SpatialDropout1D(0.3))  # 功能与 Dropout 相同，但它会丢弃整个 1D 的特征图而不是丢弃单个元素。
-    model.add(Conv1D(activation='tanh', padding='same', filters=32, kernel_size=5))  # 卷积层
+    model.add(Conv1D(activation='tanh', padding='same', filters=32, kernel_size=7))  # 卷积层
     model.add(MaxPool1D(pool_size=2))   # 池化层
     model.add(Bidirectional(LSTM(100, return_sequences=True, activation='tanh'), merge_mode='concat'))   # 双向循环神经网络层
-    model.add(Dropout(0.3))
+    model.add(Dropout(0.2))
     model.add(MaxPool1D(pool_size=2))
     model.add(LSTM(50, activation='tanh'))  # LSTM 层
     model.add(Flatten())  # 扁平层
-    model.add(Dropout(0.4))
+    model.add(Dropout(0.2))
     model.add(BatchNormalization()) # 批标准化
     model.add(Dense(6, activation='tanh'))            #加入偏置项
     # model.add(Dense(3, activation='tanh',            #加入偏置项
     #                 kernel_regularizer=regularizers.l2(0.01),
     #                 activity_regularizer=regularizers.l2(0.01)))
-    model.add(Activation('softmax'))
+    # model.add(Activation('softmax'))
     
     print('Compiling the Model...')
     #loss-目标函数（categorical_crossentropy-多分类，binary_crossentropy-二分类）
