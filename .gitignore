@@ -4,3 +4,5 @@ Data/word.json
 Data/w2vec.json
 Data/w2indx.json
 Data/combined.json
+.idea
+__pycache__

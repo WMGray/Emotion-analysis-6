@@ -1,0 +1,75 @@
+"backend: tensorflow\nclass_name: Sequential\nconfig:\n  layers:\n  - class_name:\
+  \ InputLayer\n    config:\n      batch_input_shape: !!python/tuple\n      - null\n\
+  \      - 100\n      dtype: float32\n      name: embedding_1_input\n      ragged:\
+  \ false\n      sparse: false\n  - class_name: Embedding\n    config:\n      activity_regularizer:\
+  \ null\n      batch_input_shape: !!python/tuple\n      - null\n      - 100\n   \
+  \   dtype: float32\n      embeddings_constraint: null\n      embeddings_initializer:\n\
+  \        class_name: RandomUniform\n        config:\n          maxval: 0.05\n  \
+  \        minval: -0.05\n          seed: null\n      embeddings_regularizer: null\n\
+  \      input_dim: 49915\n      input_length: 100\n      mask_zero: true\n      name:\
+  \ embedding_1\n      output_dim: 200\n      trainable: true\n  - class_name: SpatialDropout1D\n\
+  \    config:\n      dtype: float32\n      name: spatial_dropout1d_1\n      noise_shape:\
+  \ null\n      rate: 0.3\n      seed: null\n      trainable: true\n  - class_name:\
+  \ Conv1D\n    config:\n      activation: tanh\n      activity_regularizer: null\n\
+  \      bias_constraint: null\n      bias_initializer:\n        class_name: Zeros\n\
+  \        config: {}\n      bias_regularizer: null\n      data_format: channels_last\n\
+  \      dilation_rate: !!python/tuple\n      - 1\n      dtype: float32\n      filters:\
+  \ 32\n      groups: 1\n      kernel_constraint: null\n      kernel_initializer:\n\
+  \        class_name: GlorotUniform\n        config:\n          seed: null\n    \
+  \  kernel_regularizer: null\n      kernel_size: !!python/tuple\n      - 7\n    \
+  \  name: conv1d_1\n      padding: same\n      strides: !!python/tuple\n      - 1\n\
+  \      trainable: true\n      use_bias: true\n  - class_name: MaxPooling1D\n   \
+  \ config:\n      data_format: channels_last\n      dtype: float32\n      name: max_pooling1d_2\n\
+  \      padding: valid\n      pool_size: !!python/tuple\n      - 2\n      strides:\
+  \ !!python/tuple\n      - 2\n      trainable: true\n  - class_name: Bidirectional\n\
+  \    config:\n      dtype: float32\n      layer:\n        class_name: LSTM\n   \
+  \     config:\n          activation: tanh\n          activity_regularizer: null\n\
+  \          bias_constraint: null\n          bias_initializer:\n            class_name:\
+  \ Zeros\n            config: {}\n          bias_regularizer: null\n          dropout:\
+  \ 0.0\n          dtype: float32\n          go_backwards: false\n          implementation:\
+  \ 2\n          kernel_constraint: null\n          kernel_initializer:\n        \
+  \    class_name: GlorotUniform\n            config:\n              seed: null\n\
+  \          kernel_regularizer: null\n          name: lstm_2\n          recurrent_activation:\
+  \ sigmoid\n          recurrent_constraint: null\n          recurrent_dropout: 0.0\n\
+  \          recurrent_initializer:\n            class_name: Orthogonal\n        \
+  \    config:\n              gain: 1.0\n              seed: null\n          recurrent_regularizer:\
+  \ null\n          return_sequences: true\n          return_state: false\n      \
+  \    stateful: false\n          time_major: false\n          trainable: true\n \
+  \         unit_forget_bias: true\n          units: 100\n          unroll: false\n\
+  \          use_bias: true\n      merge_mode: concat\n      name: bidirectional_1\n\
+  \      trainable: true\n  - class_name: Dropout\n    config:\n      dtype: float32\n\
+  \      name: dropout_2\n      noise_shape: null\n      rate: 0.2\n      seed: null\n\
+  \      trainable: true\n  - class_name: MaxPooling1D\n    config:\n      data_format:\
+  \ channels_last\n      dtype: float32\n      name: max_pooling1d_3\n      padding:\
+  \ valid\n      pool_size: !!python/tuple\n      - 2\n      strides: !!python/tuple\n\
+  \      - 2\n      trainable: true\n  - class_name: LSTM\n    config:\n      activation:\
+  \ tanh\n      activity_regularizer: null\n      bias_constraint: null\n      bias_initializer:\n\
+  \        class_name: Zeros\n        config: {}\n      bias_regularizer: null\n \
+  \     dropout: 0.0\n      dtype: float32\n      go_backwards: false\n      implementation:\
+  \ 2\n      kernel_constraint: null\n      kernel_initializer:\n        class_name:\
+  \ GlorotUniform\n        config:\n          seed: null\n      kernel_regularizer:\
+  \ null\n      name: lstm_3\n      recurrent_activation: sigmoid\n      recurrent_constraint:\
+  \ null\n      recurrent_dropout: 0.0\n      recurrent_initializer:\n        class_name:\
+  \ Orthogonal\n        config:\n          gain: 1.0\n          seed: null\n     \
+  \ recurrent_regularizer: null\n      return_sequences: false\n      return_state:\
+  \ false\n      stateful: false\n      time_major: false\n      trainable: true\n\
+  \      unit_forget_bias: true\n      units: 50\n      unroll: false\n      use_bias:\
+  \ true\n  - class_name: Flatten\n    config:\n      data_format: channels_last\n\
+  \      dtype: float32\n      name: flatten_1\n      trainable: true\n  - class_name:\
+  \ Dropout\n    config:\n      dtype: float32\n      name: dropout_3\n      noise_shape:\
+  \ null\n      rate: 0.2\n      seed: null\n      trainable: true\n  - class_name:\
+  \ BatchNormalization\n    config:\n      axis: !!python/object/apply:tensorflow.python.training.tracking.data_structures.ListWrapper\n\
+  \      - - 1\n      beta_constraint: null\n      beta_initializer:\n        class_name:\
+  \ Zeros\n        config: {}\n      beta_regularizer: null\n      center: true\n\
+  \      dtype: float32\n      epsilon: 0.001\n      gamma_constraint: null\n    \
+  \  gamma_initializer:\n        class_name: Ones\n        config: {}\n      gamma_regularizer:\
+  \ null\n      momentum: 0.99\n      moving_mean_initializer:\n        class_name:\
+  \ Zeros\n        config: {}\n      moving_variance_initializer:\n        class_name:\
+  \ Ones\n        config: {}\n      name: batch_normalization_1\n      scale: true\n\
+  \      trainable: true\n  - class_name: Dense\n    config:\n      activation: softmax\n\
+  \      activity_regularizer: null\n      bias_constraint: null\n      bias_initializer:\n\
+  \        class_name: Zeros\n        config: {}\n      bias_regularizer: null\n \
+  \     dtype: float32\n      kernel_constraint: null\n      kernel_initializer:\n\
+  \        class_name: GlorotUniform\n        config:\n          seed: null\n    \
+  \  kernel_regularizer: null\n      name: dense_1\n      trainable: true\n      units:\
+  \ 6\n      use_bias: true\n  name: sequential_1\nkeras_version: 2.4.0\n"

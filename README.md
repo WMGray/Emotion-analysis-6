@@ -58,7 +58,7 @@
    | **Total** |     2164585     |      |
 
 - 由于某些不可知原因，每次去重后数据位置发生变化，但数据量并不会发生改变(相较于未去重减少，只是去重数据位置不固定)
-- ![image-20220413002814804](C:\Users\14667\AppData\Roaming\Typora\typora-user-images\image-20220413002814804.png)
+- ![(C:\Users\14667\AppData\Roaming\Typora\typora-user-images\image-20220413002814804.png)
 - 在所有数据基础上训练30轮，训练集准确率为70%左右
 - 因所有数据训练时间过长，故每个随机选取20w进行试验
 # 尝试：
@@ -81,32 +81,36 @@
 
     将BN层调整至Dropout层下
 
-    ![	](C:\Users\14667\AppData\Roaming\Typora\typora-user-images\image-20220413201257676.png)
+    ![](images\3.png)
 
-    4. ​    model.add(Embedding(output_dim=vocab_dim,
-	   ​                        input_dim=n_symbols,
-       ​                        mask_zero=True,  # 
-       ​                        trainable=True,  
-       ​                        weights=[embedding_weights],
-       ​                        input_length=input_length))  # Adding Input Length
-       ​    model.add(SpatialDropout1D(0.4))  # 功能与 Dropout 相同，但它会丢弃整个 1D 的特征图而不是丢弃单个元素。
-       ​    model.add(Conv1D(activation='tanh', padding='same', filters=32, kernel_size=5))  # 卷积层
-       ​    model.add(MaxPool1D(pool_size=2))   # 池化层
-       ​    model.add(Bidirectional(LSTM(100, return_sequences=True, activation='tanh'), merge_mode='concat'))   # 双向循环神经网络层
-       ​    model.add(Dropout(0.3))
-       ​    model.add(MaxPool1D(pool_size=2))
-       ​    model.add(LSTM(50, activation='tanh'))  # LSTM 层
-       ​    model.add(Flatten())  # 扁平层
-       ​    model.add(Dropout(0.3))
-       ​    model.add(BatchNormalization()) # 批标准化
-       ​    model.add(Dense(6, activation='softmax'))            #加入偏置项
-    
-       ![image-20220413220944348](C:\Users\14667\AppData\Roaming\Typora\typora-user-images\image-20220413220944348.png)
-    
-       5. ```
+    4.  
+	   
+       ```
           model.add(Embedding(output_dim=vocab_dim,
+                               input_dim=n_symbols,
+                               mask_zero=True,  # 
+                               trainable=True,  
+                               weights=[embedding_weights],
+                               input_length=input_length))  # Adding Input Length
+           model.add(SpatialDropout1D(0.4))  # 功能与 Dropout 相同，但它会丢弃整个 1D 的特征图而不是丢弃单个元素。
+           model.add(Conv1D(activation='tanh', padding='same', filters=32, kernel_size=5))  # 卷积层
+           model.add(MaxPool1D(pool_size=2))   # 池化层
+           model.add(Bidirectional(LSTM(100, return_sequences=True, activation='tanh'), merge_mode='concat'))   # 双向循环神经网络层
+           model.add(Dropout(0.3))
+           model.add(MaxPool1D(pool_size=2))
+           model.add(LSTM(50, activation='tanh'))  # LSTM 层
+           model.add(Flatten())  # 扁平层
+           model.add(Dropout(0.3))
+           model.add(BatchNormalization()) # 批标准化
+           model.add(Dense(6, activation='softmax'))            #加入偏置项
+       ```
+       
+	   ![](images/4.png)
+       
+	   5. ```
+	      model.add(Embedding(output_dim=vocab_dim,
 	                       input_dim=n_symbols,
-                           mask_zero=True,  # 
+	                       mask_zero=True,  # 
 	                       trainable=True,  
 	                       weights=[embedding_weights],
 	                       input_length=input_length))  # Adding Input Length
@@ -123,7 +127,7 @@
 	      model.add(Dense(6, activation='softmax'))            #加入偏置项
 	      ```
 
-![image-20220413230726477](C:\Users\14667\AppData\Roaming\Typora\typora-user-images\image-20220413230726477.png)
+![](images/5.png)
 
 6. ```
    model = Sequential()
@@ -151,17 +155,14 @@
        model.add(Activation('softmax'))
    ```
 
-   
+   ![](images/6.png)
 
-​	        	 
 
 
 
 # 代码
 
-  代码主要参考  并做了一些修改
-
-修改：
+代码中遇到的一些问题及解决办法
 
 - https://cache.one/read/16905246
 - https://www.kaggle.com/general/197993
@@ -169,7 +170,6 @@
 - https://blog.csdn.net/cyz52/article/details/90454158
 - https://blog.csdn.net/lcy6239/article/details/115786432
 - https://blog.csdn.net/qsx123432/article/details/120583529
-- ![image-20220409163304407](C:\Users\14667\AppData\Roaming\Typora\typora-user-images\image-20220409163304407.png)
 
 参考：
 - [如何选择优化器 optimizer](https://blog.csdn.net/aliceyangxi1987/article/details/73210204)
