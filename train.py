@@ -73,69 +73,7 @@ def tokenizer(combined):
     return text
 
 
-def create_dictionaries(model=None, combined=None):
-    """创建词语字典，并返回每个词语的索引，词向量，以及每个句子所对应的词语索引"""
-    if (combined is not None) and (model is not None):
-        if os.path.exists(Config.combined_path) and os.path.exists(Config.w2vec_path) and os.path.exists(
-                Config.w2indx_path):  # 已写入
-            print("加载词典")
-            w2indx_json = codecs.open(Config.w2indx_path, 'r', encoding=Config.encoding)
-            w2vec_json = codecs.open(Config.w2vec_path, 'r', encoding=Config.encoding)
-            combined_json = codecs.open(Config.combined_path, 'r', encoding=Config.encoding)
 
-            w2indx = json.load(w2indx_json)
-            W2VEC = json.load(w2vec_json)  # 加载的数组为list，需转换为numppy数组
-            combined = np.loadtxt(combined_json)
-
-            # 转换
-            w2vec = dict()
-            for key, value in W2VEC.items():
-                w2vec[key] = np.asarray(value)
-
-            w2indx_json.close()
-            w2vec_json.close()
-            combined_json.close()
-
-            return w2indx, w2vec, combined
-        else:
-            gensim_dict = Dictionary()  # 创建一个空的词典,构建 word<->id 映射
-            gensim_dict.doc2bow(list(model.wv.index_to_key),
-                                allow_update=True)  # 构建词袋，每个单词对应一个id，词袋中的单词不重复
-            w2indx = {v: k + 1 for k, v in gensim_dict.items()}  # 所有频数超过10的词语的索引字典
-            w2vec = {word: model.wv[word] for word in w2indx.keys()}  # 所有频数超过10的词语的词向量字典
-            W2VEC = {word: model.wv[word].tolist() for word in w2indx.keys()}  # 将numpy数组转换为list存储
-
-            def parse_dataset(combined):
-                """将combined中的数据转换为索引表示"""
-                data = []
-                for sentence in combined:
-                    new_txt = []
-                    for word in sentence:
-                        try:
-                            new_txt.append(w2indx[word])
-                        except:
-                            new_txt.append(0)
-                    data.append(new_txt)
-                return data
-
-            combined = parse_dataset(combined)  # 将combined中的数据转换为索引表示
-            combined = sequence.pad_sequences(combined, maxlen=maxlen)  # 每个句子所含词语对应的索引，所以句子中含有频数小于10的词语，索引为0
-
-            w2indx_json = codecs.open(Config.w2indx_path, 'w', encoding=Config.encoding)
-            w2vec_json = codecs.open(Config.w2vec_path, 'w', encoding=Config.encoding)
-            combined_json = codecs.open(Config.combined_path, 'w', encoding=Config.encoding)
-
-            json.dump(w2indx, w2indx_json)
-            json.dump(W2VEC, w2vec_json)
-            np.savetxt(combined_json, combined)  # numpy.ndarrayi
-
-            w2indx_json.close()
-            w2vec_json.close()
-            combined_json.close()
-
-            return w2indx, w2vec, combined
-    else:
-        print('No data provided...')
 
 
 def word2vec_train(combined):
@@ -143,6 +81,7 @@ def word2vec_train(combined):
     # size：是指特征向量的维度  min_count:对字典做截断. 词频少于min_count次数的单词会被丢弃掉
     # window：表示当前词与预测词在一个句子中的最大距离是多少  workers：参数控制训练的并行数。
     # iter： 迭代次数，默认为5
+    print(combined)
     model = Word2Vec(vector_size=vocab_dim,
                      min_count=n_exposures,
                      window=window_size,
@@ -189,7 +128,7 @@ def plot_curve(history):
     plt.show()
 
 
-##定义网络结构
+# 定义网络结构
 def train_lstm(n_symbols, embedding_weights, x_train, y_train, x_test, y_test):
     print('Defining a Simple tensorflow.keras Model...')
     # 定义神经网络模型
