@@ -1,7 +1,7 @@
 # 情感六分类
-> pytorch 1.12.1
-> xlrd 2.0.1
-> openpyxl 
+> pytorch 1.12.1    
+> xlrd 2.0.1     
+> openpyxl         
 # 数据集
 1. 数据集：[情感分类数据集](https://www.biendata.xyz/ccf_tcci2018/datasets/emotion/)
           [情感对话生成数据集](https://www.biendata.xyz/ccf_tcci2018/datasets/ecg/)
