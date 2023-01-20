@@ -1,0 +1,12 @@
+*.xlsx
+*.json
+.idea
+__pycache__
+*.model
+*.npy
+*.npz
+*.tsv
+.ipynb_checkpoints
+word2vec/word2vec.model.syn1neg.npy
+word2vec/word2vec.model.wv.vectors.npy
+
