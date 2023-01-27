@@ -36,8 +36,27 @@
 1. TextCNN
 
    ![image-20230120091814589](images/image-20230120091814589.png)
+   
+2. Transformer（Encoder）
 
+   ```python
+   class TransformerClassifier(nn.Module):
+       def __init__(self):
+           super(TransformerClassifier, self).__init__()
+           self.encoder = Encoder()    # [batch, source_len, d_model]
+           self.fc = nn.Linear(max_len * d_model, output_size)
+   
+       def forward(self, inputs):
+           """
+           inputs: [batch, source_len]
+           """
+           outputs, attns = self.encoder(inputs)   # [batch, source_len, d_model]
+           outputs = self.fc(outputs.view(outputs.shape[0], -1)) # [batch, output_size]
+   
+           return outputs, attns
+   ```
 
+   
 
 
 # 代码
